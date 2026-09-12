@@ -14,7 +14,7 @@ h1, h2, h3, h4, h5, h6, p, span, label, li {
   margin-right: auto;
 }
 
-/* Redimensionnement standard et propre du logo */
+/* Redimensionnement du logo */
 header img, .logo img, img.logo {
   width: 110px !important;
   height: 110px !important;
@@ -25,7 +25,7 @@ header img, .logo img, img.logo {
   display: block;
 }
 
-/* Style de la barre de menu (Navigation) */
+/* Barre de navigation et Sélecteur de langue */
 nav, .nav, header nav, div nav {
   background-color: #ffffff;
   padding: 12px 20px;
@@ -35,12 +35,11 @@ nav, .nav, header nav, div nav {
   justify-content: center;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   border-radius: 50px;
-  max-width: 900px;
+  max-width: 950px;
 }
 
-/* Style des liens du menu et de navigation */
 nav a, .nav a, header a {
   color: #1e293b;
   background-color: #f1f5f9;
@@ -51,7 +50,6 @@ nav a, .nav a, header a {
   border-radius: 20px;
   transition: all 0.3s ease;
   display: inline-block;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
 }
 
 nav a:hover, .nav a:hover, header a:hover {
@@ -61,19 +59,25 @@ nav a:hover, .nav a:hover, header a:hover {
   box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
 }
 
-/* Liens généraux dans le contenu */
-a {
-  color: #2563eb;
-  text-decoration: none;
-  transition: color 0.2s;
+/* Sélecteur de langues stylisé */
+select.language-selector, select {
+  background-color: #f1f5f9;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
-a:hover {
-  color: #1d4ed8;
-  text-decoration: underline;
+select.language-selector:hover {
+  background-color: #e2e8f0;
 }
 
-/* Images générales en format carte centrée */
+/* Images centrées et fluides */
 img {
   max-width: 85%;
   height: auto;
@@ -111,7 +115,7 @@ button:hover, input[type="submit"]:hover, .btn:hover {
   transform: translateY(-2px);
 }
 
-/* Formulaires centrés */
+/* Formulaires et Newsletter */
 form {
   display: flex;
   flex-direction: column;
@@ -120,7 +124,17 @@ form {
   margin: 0 auto;
 }
 
-input[type="text"], input[type="email"], select, textarea {
+.newsletter-section {
+  background: #ffffff;
+  padding: 35px 20px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin: 40px auto;
+  border: 1px solid #e2e8f0;
+}
+
+input[type="text"], input[type="email"], textarea {
   width: 90%;
   padding: 12px;
   margin: 8px auto 16px auto;
@@ -133,13 +147,13 @@ input[type="text"], input[type="email"], select, textarea {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus, textarea:focus {
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
   outline: none;
 }
 
-/* Footer moderne et centré */
+/* Footer moderne */
 footer {
   background-color: #0f172a;
   color: #94a3b8;
