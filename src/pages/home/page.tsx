@@ -2,20 +2,19 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { messages } from '../../i18n/local';
-
 export default function Home() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const { user, isAuthenticated, signOut } = useAuth();
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [showAnnouncement, setShowAnnouncement] = useState(true);
 
   useEffect(() => {
+    // tenta iniciar reprodução por programa (fallback para navegadores que bloqueiam autoplay)
     if (videoRef.current) {
       videoRef.current.muted = true;
       videoRef.current.play().catch(() => {
-        // autoplay peut être bloqué
+        // autoplay pode ser bloqueado — manter muted ligado e o usuário pode clicar para reproduzir
       });
     }
   }, []);
@@ -46,9 +45,10 @@ export default function Home() {
       .toUpperCase()
       .slice(0, 2);
   };
+    const currentLang = 'en'; // Vous pouvez ajuster selon votre gestion de langue globale
+      const t = messages[currentLang]?.translation || messages['en']?.translation;
 
-  const currentLang = 'en';
-  const t = messages[currentLang]?.translation || messages['en']?.translation;
+const [showAnnouncement, setShowAnnouncement] = useState(true);
 
   return (
     <div className="min-h-screen bg-white">
@@ -144,66 +144,202 @@ export default function Home() {
             </div>
             <button 
               onClick={toggleMobileMenu}
-              className="md:hidden text-gray-700 hover:text-teal-600 focus:outline-none"
+              className="md:hidden p-2 cursor-pointer"
             >
-              <i className={`ri-${showMobileMenu ? 'close' : 'menu'}-line text-xl`}></i>
+              <i className={`ri-${showMobileMenu ? 'close' : 'menu'}-line text-2xl`}></i>
             </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {showMobileMenu && (
+          <div className="md:hidden bg-white border-t border-gray-200">
+            <div className="px-4 py-2 space-y-1">
+              <Link 
+                to="/" 
+                className="block px-3 py-2 text-base font-medium text-teal-600 bg-teal-50 rounded-md"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                Home
+              </Link>
+              <Link 
+                to="/about" 
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md transition-colors"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                About
+              </Link>
+              <Link 
+                to="/initiatives" 
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md transition-colors"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                Initiative
+              </Link>
+              <Link 
+                to="/stakeholders" 
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md transition-colors"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                Stakeholders
+              </Link>
+              <Link 
+                to="/agenda" 
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md transition-colors"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                Agenda
+              </Link>
+              <Link 
+                to="/publications" 
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md transition-colors"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                Publications
+              </Link>
+              <Link 
+                to="/meetings" 
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md transition-colors"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                Meetings
+              </Link>
+              <Link 
+                to="/contact" 
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md transition-colors"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                Contact
+              </Link>
+
+              <div className="pt-4 pb-2">
+                {isAuthenticated && user ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-3 px-3 py-2">
+                      {user.user_metadata?.avatar_url ? (
+                        <img
+                          src={user.user_metadata.avatar_url}
+                          alt="Profile"
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                          {getInitials(user.user_metadata?.full_name || user.email?.charAt(0) || 'U')}
+                        </div>
+                      )}
+                      <span className="text-gray-700 font-medium">{user.user_metadata?.full_name || 'User'}</span>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        handleViewProfile();
+                        setShowMobileMenu(false);
+                      }}
+                      className="w-full text-left px-3 py-2 text-gray-700 hover:text-teal-600 font-medium"
+                    >
+                      View Profile
+                    </button>
+                    <button 
+                      onClick={() => {
+                        handleLogout();
+                        setShowMobileMenu(false);
+                      }}
+                      className="w-full text-left px-3 py-2 text-gray-700 hover:text-teal-600 font-medium"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <Link 
+                    to="/signin"
+                    className="w-full bg-blue-900 text-white px-4 py-2 rounded-md hover:bg-blue-800 font-medium whitespace-nowrap cursor-pointer block text-center"
+                    onClick={() => setShowMobileMenu(false)}
+                  >
+                    Sign In
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </header>
 
-      {/* Annonce Modal */}
+      {/* Main Content */}
+      {/* --- FENÊTRE MODALE D'ANNONCE PERSONNALISÉE --- */}
       {showAnnouncement && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="bg-gradient-to-br from-blue-950 to-blue-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-blue-800 text-white relative">
-            <button 
-              onClick={() => setShowAnnouncement(false)}
-              className="absolute top-4 right-4 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition z-10"
-              aria-label="Fermer"
-            >
-              ✕
-            </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fade-in">
+            <div className="bg-gradient-to-br from-blue-950 to-blue-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-blue-800 text-white relative">
+                  
+                        {/* Bouton de fermeture */}
+                              <button 
+                                      onClick={() => setShowAnnouncement(false)}
+                                              className="absolute top-4 right-4 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition z-10"
+                                                      aria-label="Fermer"
+                                                            >
+                                                                    ✕
+                                                                          </button>
 
-            <div className="p-6 pb-4 border-b border-blue-800/60 relative">
-              <span className="text-xs uppercase tracking-widest text-blue-300 font-semibold bg-blue-900/80 px-3 py-1 rounded-full border border-blue-700/50">
-                {t?.home?.forumBadge || "Africa Economic Forum 2026"}
-              </span>
-              <h3 className="text-3xl font-extrabold mt-3 tracking-tight">
-                {t?.home?.forumTitle || "Africa & Global Realignments:"}
-              </h3>
-              <p className="text-blue-200 text-sm mt-1 font-medium">
-                {t?.home?.forumSubtitle || "Investments, Alliances & Strategic Opportunities"}
-              </p>
-            </div>
+                                                                                {/* En-tête style Affiche */}
+                                                                                      <div className="p-6 pb-4 border-b border-blue-800/60 relative">
+                                                                                              <span className="text-xs uppercase tracking-widest text-blue-300 font-semibold bg-blue-900/80 px-3 py-1 rounded-full border border-blue-700/50">
+                                                                                                        <span className="text-xs uppercase tracking-widest text-blue-300 font-semibold bg-blue-900/80 px-3 py-1 rounded-full border border-blue-700/50">
+                                                                                                          {t?.home?.forumBadge || "Africa Economic Forum 2026"}
+                                                                                                          </span>
+                                                                                                          <h3 className="text-3xl font-extrabold mt-3 tracking-tight">
+                                                                                                            {t?.home?.forumTitle || "Africa & Global Realignments:"}
+                                                                                                            </h3>
+                                                                                                            <p className="text-blue-200 text-sm mt-1 font-medium">
+                                                                                                              {t?.home?.forumSubtitle || "Investments, Alliances & Strategic Opportunities"}
+                                                                                                              </p>
 
-            <div className="p-6 space-y-5 bg-blue-900/40">
-              <div className="grid grid-cols-2 gap-4 bg-blue-950/60 p-4 rounded-xl border border-blue-800/40">
-                <div>
-                  <span className="block text-xs uppercase text-blue-400 font-semibold">Dates</span>
-                  <span className="text-lg font-bold text-white">10-11 Nov 2026</span>
-                </div>
-                <div>
-                  <span className="block text-xs uppercase text-blue-400 font-semibold">Location</span>
-                  <span className="text-lg font-bold text-white">Kinshasa, DRC</span>
-                </div>
-              </div>
+                                                                                                                                                                          </div>
 
-              <div className="flex gap-3">
-                <button className="flex-1 px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-medium rounded-xl transition text-sm">
-                  Rejoindre
-                </button>
-                <button 
-                  onClick={() => setShowAnnouncement(false)}
-                  className="px-5 py-3 bg-blue-800/60 hover:bg-blue-800 text-white font-medium rounded-xl transition border border-blue-700/50 text-sm"
-                >
-                  {t?.common?.close || "Fermer"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+                                                                                                                                                                                {/* Corps de la modale avec les infos pratiques de l'affiche */}
+                                                                                                                                                                                      <div className="p-6 space-y-5 bg-blue-900/40">
+                                                                                                                                                                                              
+                                                                                                                                                                                                      {/* Bloc Dates et Lieu */}
+                                                                                                                                                                                                              <div className="grid grid-cols-2 gap-4 bg-blue-950/60 p-4 rounded-xl border border-blue-800/40">
+                                                                                                                                                                                                                        <div>
+                                                                                                                                                                                                                                    <span className="block text-xs uppercase text-blue-400 font-semibold">Dates</span>
+                                                                                                                                                                                                                                                <span className="text-lg font-bold text-white">10-11 Nov 2026</span>
+                                                                                                                                                                                                                                                          </div>
+                                                                                                                                                                                                                                                                    <div>
+                                                                                                                                                                                                                                                                        <span className="block text-xs uppercase text-blue-400 font-semibold">{t?.home?.datesLabel || "Dates"}</span>
+                                                                                                                                                                                                                                                                          <span className="text-lg font-bold text-white">10-11 Nov 2026</span>
+                                                                                                                                                                                                                                                                          </div>
+                                                                                                                                                                                                                                                                          <div>
+                                                                                                                                                                                                                                                                            <span className="block text-xs uppercase text-blue-400 font-semibold">{t?.home?.locationLabel || "Lieu"}</span>
+                                                                                                                                                                                                                                                                              <span className="text-sm font-semibold text-white">Kinshasa<br/><span className="text-xs text-blue-300 font-normal">Fleuve Congo Hotel</span></span>
+                                                                                                                                                                                                                                                                              </div>
+                                                                                                                                                                                                                                                                              
 
+                                                                                                                                                                                                                                                                                                                      <p className="text-xs text-blue-300/80 text-center italic">
+                                                                                                                                                                                                                                                                                                                                Partner with Africa's Davos • www.africaef.com
+                                                                                                                                                                                                                                                                                                                                        </p>
+
+                                                                                                                                                                                                                                                                                                                                                {/* Boutons d'action avec lien Agenda */}
+                                                                                                                                                                                                                                                                                                                                                        <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                                                                                                                                                                                                                                                                                                                                                                  <Link
+                                                                                                                                                                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                                                                                                                                                to="/agenda"
+                                                                                                                                                                                                                                                                                                                                                                                  onClick={() => setShowAnnouncement(false)}
+                                                                                                                                                                                                                                                                                                                                                                                    className="flex-1 bg-white hover:bg-blue-50 text-blue-950 font-bold py-3 px-4 rounded-xl text-center transition shadow-lg flex items-center justify-center space-x-2"
+                                                                                                                                                                                                                                                                                                                                                                                    >
+                                                                                                                                                                                                                                                                                                                                                                                      <span>📅 {t?.home?.viewAgenda || "Voir l'Agenda"}</span>
+                                                                                                                                                                                                                                                                                                                                                                                      </Link>
+                                                                                                                                                                                                                                                                                                                                                                                      <button
+                                                                                                                                                                                                                                                                                                                                                                                        onClick={() => setShowAnnouncement(false)}
+                                                                                                                                                                                                                                                                                                                                                                                          className="px-5 py-3 bg-blue-800/60 hover:bg-blue-800 text-white font-medium rounded-xl transition border border-blue-700/50 text-sm"
+                                                                                                                                                                                                                                                                                                                                                                                          >
+                                                                                                                                                                                                                                                                                                                                                                                            {t?.common?.close || "Fermer"}
+                                                                                                                                                                                                                                                                                                                                                                                            </button>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
       <main>
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20 lg:py-32">
@@ -212,89 +348,450 @@ export default function Home() {
               <div className="space-y-8">
                 <div className="space-y-6">
                   <p className="text-blue-200 text-lg font-medium">Our mission</p>
-                  <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight">
-                    Strengthening Africa's Economic Future
+                  <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+                    A premier platform convening leaders, governments, investors, and thinkers to shape Africa’s role in the new global order
                   </h1>
-                  <p className="text-xl text-blue-100">
-                    Bringing together visionary leaders, investors, and entrepreneurs to drive sovereign economic transformation across the continent.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Link to="/about" className="px-8 py-4 bg-white text-blue-900 font-bold rounded-lg hover:bg-gray-100 transition">
-                      Learn More
-                    </Link>
-                    <Link to="/contact" className="px-8 py-4 border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition">
-                      Get In Touch
-                    </Link>
-                  </div>
+                  <Link
+                    to="/about"
+                    className="bg-white text-blue-900 px-8 py-3 rounded-md hover:bg-gray-100 font-medium flex items-center space-x-2 whitespace-nowrap cursor-pointer"
+                  >
+                    <span>More about the Forum</span>
+                    <i className="ri-arrow-right-line"></i>
+                  </Link>
                 </div>
               </div>
               <div className="relative">
                 <video
                   ref={videoRef}
-                  className="w-full rounded-lg shadow-2xl"
-                  controls
+                  className="w-full h-96 rounded-lg shadow-lg object-cover"
+                  src="/videos/aef-video.mp4"
+                  title="Africa Economic Forum Video"
                   autoPlay
-                  muted
                   loop
-                >
-                  <source src="https://example.com/video.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                  muted
+                  playsInline
+                  preload="auto"
+                />
+                <div className="absolute inset-0 bg-black/10 rounded-lg pointer-events-none"></div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Publications Section */}
+        {/* How we drive impact */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Latest Updates</h2>
-              <p className="text-xl text-gray-600">Stay informed with our latest news and insights</p>
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-8">How we drive impact</h2>
+              <div className="flex justify-center space-x-8 mb-12">
+                <a 
+                  href="/initiatives"
+                  className="px-6 py-3 font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer bg-blue-900 text-white hover:bg-blue-800"
+                >
+                  Initiatives
+                </a>
+                <a 
+                  href="/meetings"
+                  className="px-6 py-3 font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer text-gray-600 hover:text-blue-900 hover:bg-gray-100"
+                >
+                  Meetings
+                </a>
+                <a 
+                  href="/stakeholders"
+                  className="px-6 py-3 font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer text-gray-600 hover:text-blue-900 hover:bg-gray-100"
+                >
+                  Stakeholders
+                </a>
+              </div>
             </div>
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="space-y-8">
+                <h2 className="text-4xl font-bold text-gray-900">How We Drive Impact</h2>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Through strategic initiatives, partnerships, and platforms, we create tangible pathways for Africa's economic transformation and global leadership.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <i className="ri-lightbulb-line text-blue-600"></i>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-2">Strategic Dialogue Platforms</h3>
+                      <p className="text-gray-600">Creating spaces for meaningful conversations between African leaders and global partners.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <i className="ri-handshake-line text-green-600"></i>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-2">Partnership Facilitation</h3>
+                      <p className="text-gray-600">Connecting African opportunities with global capital, technology, and expertise.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <i className="ri-rocket-line text-purple-600"></i>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-2">Innovation Acceleration</h3>
+                      <p className="text-gray-600">Supporting breakthrough solutions that address Africa's most pressing challenges.</p>
+                    </div>
+                  </div>
+                </div>
+                <a 
+                  href="/initiatives"
+                  className="bg-blue-900 text-white px-8 py-3 rounded-md hover:bg-blue-800 font-medium whitespace-nowrap cursor-pointer inline-block"
+                >
+                  <span>More about our Initiatives</span>
+                </a>
+              </div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-1">
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden h-full">
-                  <img src="/images/news.jpg" alt="Featured" className="w-full h-48 object-cover" />
-                  <div className="p-6">
-                    <span className="text-blue-600 font-medium text-sm">Featured</span>
-                    <h3 className="text-xl font-bold text-gray-900 mt-2">Economic Resilience in Africa</h3>
-                    <p className="text-gray-600 text-sm mt-3">Building sustainable economic structures for long-term growth.</p>
+              {/* Existing right column content */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                    <img 
+                      src="https://readdy.ai/api/search-image?query=African%20economic%20leaders%20and%20business%20executives%20in%20modern%20conference%20setting%2C%20professional%20meeting%20with%20diverse%20African%20participants%20discussing%20economic%20development%2C%20contemporary%20architecture%20with%20African%20cultural%20elements%2C%20dignified%20cooperation%20and%20strategic%20partnerships&width=400&height=300&seq=centre1-updated&orientation=landscape" 
+                      alt="Advanced Manufacturing" 
+                      className="w-full h-48 object-cover object-top" 
+                    />
+                    <div className="p-4">
+                      <h4 className="font-semibold text-gray-900">Africa Investment & Innovation Fund (AIIF)</h4>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                    <img 
+                      src="https://readdy.ai/api/search-image?query=African%20technology%20innovation%20hub%20with%20young%20entrepreneurs%2C%20modern%20startup%20incubator%20in%20African%20city%2C%20digital%20solutions%20and%20fintech%20development%2C%20diverse%20African%20tech%20professionals%20working%20on%20computers&width=400&height=300&seq=centre2-updated&orientation=landscape" 
+                      alt="AI Excellence" 
+                      className="w-full h-48 object-cover object-top" 
+                    />
+                    <div className="p-4">
+                      <h4 className="font-semibold text-gray-900">African Economic Intelligence Hub</h4>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-4 mt-8">
+                  <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                    <img 
+                      src="https://readdy.ai/api/search-image?query=African%20cybersecurity%20operations%20center%2C%20modern%20tech%20security%20infrastructure%20in%20African%20business%20district%2C%20digital%20protection%20systems%20with%20African%20professionals%20monitoring%20networks&width=400&height=300&seq=centre3-updated&orientation=landscape" 
+                      alt="Cybersecurity" 
+                      className="w-full h-48 object-cover object-top" 
+                    />
+                    <div className="p-4">
+                      <h4 className="font-semibold text-gray-900">Next Africa Accelerator</h4>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                    <img 
+                      src="https://readdy.ai/api/search-image?query=African%20renewable%20energy%20infrastructure%20with%20solar%20panels%20and%20wind%20turbines%2C%20sustainable%20energy%20development%20in%20African%20landscape%2C%20clean%20technology%20with%20African%20engineers%20and%20technicians&width=400&height=300&seq=centre4-updated&orientation=landscape" 
+                      alt="Energy and Materials" 
+                      className="w-full h-48 object-cover object-top" 
+                    />
+                    <div className="p-4">
+                      <h4 className="font-semibold text-gray-900">AEF Labs</h4>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="lg:col-span-2 space-y-4">
-                <article className="border-b border-gray-200 pb-4 last:border-b-0 cursor-pointer hover:bg-gray-50 p-2 rounded">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-1">
-                      <div className="mb-1">
+            </div>
+          </div>
+        </section>
+
+        {/* Our 10 Meetings */}
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">See our Different Meetings</h2>
+              <p className="text-gray-600 text-lg max-w-3xl mx-auto">Explore our key meetings addressing Africa's most pressing economic challenges</p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                <img 
+                  src="https://readdy.ai/api/search-image?query=African%20economic%20summit%20with%20government%20leaders%20and%20business%20executives%20in%20modern%20conference%20hall%2C%20professional%20meeting%20discussing%20economic%20development%20strategies%2C%20diverse%20African%20participants%20in%20formal%20business%20attire&width=400&height=300&seq=meeting1&orientation=landscape" 
+                  alt="Annual Economic Summit" 
+                  className="w-full h-48 object-cover object-top" 
+                />
+                <div className="p-6">
+                  <h3 className="font-semibold text-gray-900 text-lg leading-tight">the Africa Mining & Minerals Forum (AMMF)</h3>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                <img 
+                  src="https://readdy.ai/api/search-image?query=African%20trade%20ministers%20and%20business%20leaders%20discussing%20regional%20trade%20agreements%2C%20modern%20conference%20room%20with%20African%20flags%2C%20professional%20diplomatic%20meeting%20focused%20on%20economic%20collaboration&width=400&height=300&seq=meeting2&orientation=landscape" 
+                  alt="Regional Trade Forum" 
+                  className="w-full h-48 object-cover object-top" 
+                />
+                <div className="p-6">
+                  <h3 className="font-semibold text-gray-900 text-lg leading-tight">Africa Agriculture & Food Forum (AAFF)</h3>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                <img 
+                  src="https://readdy.ai/api/search-image?query=African%20investment%20conference%20with%20international%20investors%20and%20African%20entrepreneurs%2C%20modern%20business%20center%20with%20presentation%20screens%20showing%20investment%20opportunities%20&width=400&height=300&seq=meeting3&orientation=landscape" 
+                  alt="Investment Conference" 
+                  className="w-full h-48 object-cover object-top" 
+                />
+                <div className="p-6">
+                  <h3 className="font-semibold text-gray-900 text-lg leading-tight">Africa Tourism & Trade Forum (ATTF)</h3>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                <img 
+                  src="https://readdy.ai/api/search-image?query=African%20technology%20leaders%20and%20innovators%20in%20modern%20tech%20conference%2C%20startup%20pitch%20presentations%20with%20digital%20displays%2C%20young%20African%20entrepreneurs%20showcasing%20technological%20solutions&width=400&height=300&seq=meeting4&orientation=landscape" 
+                  alt="Innovation Symposium" 
+                  className="w-full h-48 object-cover object-top" 
+                />
+                <div className="p-6">
+                  <h3 className="font-semibold text-gray-900 text-lg leading-tight">Africa Digital Economy & Tech Forum (ADETF)</h3>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                <img 
+                  src="/images/africa-women.jpg" 
+                  alt="Africa Women Forum" 
+                  className="w-full h-48 object-cover object-top" 
+                />
+                <div className="p-6">
+                  <h3 className="font-semibold text-gray-900 text-lg leading-tight">Africa Women Forum (AWF)</h3>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                <img 
+                  src="https://readdy.ai/api/search-image?query=African%20healthcare%20leaders%20and%20medical%20professionals%20in%20health%20policy%20conference%2C%20modern%20medical%20facility%20meeting%20room%2C%20diverse%20healthcare%20experts%20discussing%20public%20health%20strategies&width=400&height=300&seq=meeting6&orientation=landscape" 
+                  alt="Healthcare Leadership Summit" 
+                  className="w-full h-48 object-cover object-top" 
+                />
+                <div className="p-6">
+                  <h3 className="font-semibold text-gray-900 text-lg leading-tight"> Africa Healthcare & Pharmaceuticals Forum</h3>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                <img 
+                  src="https://readdy.ai/api/search-image?query=African%20environmental%20ministers%20and%20climate%20experts%20discussing%20sustainability%20policies%2C%20green%20conference%20venue%20with%20renewable%20energy%20displays%20&width=400&height=300&seq=meeting7&orientation=landscape" 
+                  alt="Climate Action Assembly" 
+                  className="w-full h-48 object-cover object-top" 
+                />
+                <div className="p-6">
+                  <h3 className="font-semibold text-gray-900 text-lg leading-tight">Africa Energy & Infrastructure Forum</h3>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                <img 
+                  src="https://readdy.ai/api/search-image?query=African%20trade%20officials%20and%20diplomats%20in%20international%20trade%20negotiations%2C%20formal%20diplomatic%20meeting%20room%20with%20world%20maps%20&width=400&height=300&seq=meeting8&orientation=landscape" 
+                  alt="Trade Policy Roundtable" 
+                  className="w-full h-48 object-cover object-top" 
+                />
+                <div className="p-6">
+                  <h3 className="font-semibold text-gray-900 text-lg leading-tight">Africa Wealth Forum</h3>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                <img 
+                  src="https://readdy.ai/api/search-image?query=African%20economic%20development%20experts%20and%20social%20policy%20makers%20in%20modern%20conference%20center%2C%20diverse%20professionals%20discussing%20inclusive%20growth%20strategies%2C%20contemporary%20meeting%20space&width=400&height=300&seq=meeting9&orientation=landscape" 
+                  alt="Economic Development Workshop" 
+                  className="w-full h-48 object-cover object-top" 
+                />
+                <div className="p-6">
+                  <h3 className="font-semibold text-gray-900 text-lg leading-tight"> Africa Youth Forum (AYF)</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Spotlight */}
+        <section className="py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center mb-12">
+              <div>
+                <h2 className="text-4xl font-bold text-gray-900 mb-4">Spotlight</h2>
+                <p className="text-gray-600 text-lg"> Invest in Africa. Country by Country.</p>
+              </div>
+              <button className="bg-blue-900 text-white px-6 py-3 rounded-md hover:bg-blue-800 font-medium flex items-center space-x-2 whitespace-nowrap cursor-pointer">
+                <span>More Stories</span>
+                <i className="ri-arrow-right-line"></i>
+              </button>
+            </div>
+            <div className="grid lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                  <div className="relative">
+                    <img 
+                      src="https://assets.weforum.org/article/image/Uwbfxacnvqw4k8cRvkrJtfWmaE3yh_DoZ6yD_QxdCeo.jpg" 
+                      alt="SDIM 2025: Surprising stats and key conversations from our New York meetings" 
+                      className="w-full h-64 object-cover object-top" 
+                    />
+                  </div>
+                  <div className="p-6">
+                    <div className="flex items-center space-x-4 mb-4">
+                      <span className="text-blue-600 font-medium text-sm">Global Cooperation</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 leading-tight">Unveiling investment-ready nations and transformative partnerships.</h3>
+                  </div>
+                </article>
+              </div>
+              <div className="space-y-6">
+                <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                  <div className="flex">
+                    <div className="relative w-32 h-24 flex-shrink-0">
+                      <img 
+                        src="https://assets.weforum.org/article/image/vxHpLiINOQ37FUtocfRZvxAwdPaUDjT3rBAlxjrbC0k.JPG" 
+                        alt="Europe is lagging in AI adoption – how can businesses close the gap?" 
+                        className="w-full h-full object-cover object-top" 
+                      />
+                    </div>
+                    <div className="p-4 flex-1">
+                      <div className="mb-2">
+                        <span className="text-blue-600 font-medium text-sm">Emerging Technologies</span>
+                      </div>
+                      <h4 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-3">Europe is lagging in AI adoption – how can businesses close the gap?</h4>
+                    </div>
+                  </div>
+                </article>
+                <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                  <div className="flex">
+                    <div className="relative w-32 h-24 flex-shrink-0">
+                      <img 
+                        src="https://assets.weforum.org/report/cover_image/d6PK7yfSfpnxr5PWKuA6yy5B1R0Kc9uasr9W_V31XqE.png" 
+                        alt="Defossilizing Industry: Considerations for Scaling-up Carbon Capture and Utilization Pathways" 
+                        className="w-full h-full object-cover object-top" 
+                      />
+                    </div>
+                    <div className="p-4 flex-1">
+                      <div className="mb-2">
                         <span className="text-blue-600 font-medium text-sm">Reports</span>
                       </div>
-                      <h5 className="font-medium text-gray-900 leading-tight hover:text-blue-600">Building Economic Resilience to Health Impacts</h5>
+                      <h4 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-3">Defossilizing Industry: Considerations for Scaling-up Carbon Capture and Utilization Pathways</h4>
                     </div>
                   </div>
                 </article>
-                <article className="border-b border-gray-200 pb-4 last:border-b-0 cursor-pointer hover:bg-gray-50 p-2 rounded">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-1">
-                      <div className="mb-1">
-                        <span className="text-blue-600 font-medium text-sm">Articles</span>
+                <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                  <div className="flex">
+                    <div className="relative w-32 h-24 flex-shrink-0">
+                      <img 
+                        src="https://assets.weforum.org/article/image/liFHL8-4-8B-VTlVsvpRRostMNqNmaGbKv-TGGYu3Sg.JPG" 
+                        alt="Logistics Emergency Team: 20 years of coordinating humanitarian aid" 
+                        className="w-full h-full object-cover object-top" 
+                      />
+                    </div>
+                    <div className="p-4 flex-1">
+                      <div className="mb-2">
+                        <span className="text-blue-600 font-medium text-sm">Global Cooperation</span>
                       </div>
-                      <h5 className="font-medium text-gray-900 leading-tight hover:text-blue-600">Why we must rethink economic strategies</h5>
+                      <h4 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-3">Logistics Emergency Team: 20 years of coordinating humanitarian aid</h4>
                     </div>
                   </div>
                 </article>
-                <article className="border-b border-gray-200 pb-4 last:border-b-0 cursor-pointer hover:bg-gray-50 p-2 rounded">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-1">
-                      <div className="mb-1">
-                        <span className="text-blue-600 font-medium text-sm">Articles</span>
+                <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                  <div className="flex">
+                    <div className="relative w-32 h-24 flex-shrink-0">
+                      <img 
+                        src="https://cdn.jwplayer.com/thumbs/rqTBjlzG-1920.jpg" 
+                        alt="Climate change is threatening workers' health. Here are 8 ways businesses can protect their employees" 
+                        className="w-full h-full object-cover object-top" 
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-black/50 rounded-full p-2">
+                          <i className="ri-play-fill text-white text-lg"></i>
+                        </div>
                       </div>
-                      <h5 className="font-medium text-gray-900 leading-tight hover:text-blue-600">Africa's role in global economic transformation</h5>
+                      <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">2:35</div>
+                    </div>
+                    <div className="p-4 flex-1">
+                      <div className="mb-2">
+                        <span className="text-blue-600 font-medium text-sm">Climate Action</span>
+                      </div>
+                      <h4 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-3">Climate change is threatening workers' health. Here are 8 ways businesses can protect their employees</h4>
                     </div>
                   </div>
                 </article>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Discover */}
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center mb-12">
+              <div>
+                <h2 className="text-4xl font-bold text-gray-900 mb-4">Discover</h2>
+                <p className="text-gray-600 text-lg">Find stories through a selection of our key strategic topics</p>
+              </div>
+              <button className="bg-blue-900 text-white px-6 py-3 rounded-md hover:bg-blue-800 font-medium flex items-center space-x-2 whitespace-nowrap cursor-pointer">
+                <span>More topics</span>
+                <i className="ri-arrow-right-line"></i>
+              </button>
+            </div>
+            <div className="space-y-16">
+              <div className="bg-gray-50 rounded-lg p-8">
+                <div className="flex justify-between items-center mb-8">
+                  <h3 className="text-2xl font-bold text-gray-900">Resilience, Peace and Security</h3>
+                  <button className="text-blue-600 hover:text-blue-800 font-medium flex items-center space-x-2 cursor-pointer">
+                    <span>View more</span>
+                    <i className="ri-arrow-right-line"></i>
+                  </button>
+                </div>
+                <div className="grid lg:grid-cols-3 gap-8">
+                  <div className="lg:col-span-1">
+                    <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                      <img 
+                        src="https://assets.weforum.org/article/image/Z6_Ad4qkPfdLI33a7PykS9BrrIcL916mG5SSEeOOksU.jpg" 
+                        alt="Why women must be involved in building flood resilience" 
+                        className="w-full h-48 object-cover object-top" 
+                      />
+                      <div className="p-6">
+                        <div className="mb-2">
+                          <span className="text-blue-600 font-medium text-sm">Articles</span>
+                        </div>
+                        <h4 className="font-semibold text-gray-900 leading-tight">Why women must be involved in building flood resilience</h4>
+                      </div>
+                    </article>
+                  </div>
+                  <div className="lg:col-span-2 space-y-4">
+                    <article className="border-b border-gray-200 pb-4 last:border-b-0 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                      <div className="flex items-start space-x-4">
+                        <div className="flex-1">
+                          <div className="mb-1">
+                            <span className="text-blue-600 font-medium text-sm">Reports</span>
+                          </div>
+                          <h5 className="font-medium text-gray-900 leading-tight hover:text-blue-600">Building Economic Resilience to the Health Impacts of Climate Change</h5>
+                        </div>
+                      </div>
+                    </article>
+                    <article className="border-b border-gray-200 pb-4 last:border-b-0 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                      <div className="flex items-start space-x-4">
+                        <div className="flex-1">
+                          <div className="mb-1">
+                            <span className="text-blue-600 font-medium text-sm">Articles</span>
+                          </div>
+                          <h5 className="font-medium text-gray-900 leading-tight hover:text-blue-600">Why we must rethink ...</h5>
+                        </div>
+                      </div>
+                    </article>
+                    <article className="border-b border-gray-200 pb-4 last:border-b-0 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                      <div className="flex items-start space-x-4">
+                        <div className="flex-1">
+                          <div className="mb-1">
+                            <span className="text-blue-600 font-medium text-sm">Articles</span>
+                          </div>
+                          <h5 className="font-medium text-gray-900 leading-tight hover:text-blue-600">Why is the International Day of Peace ...</h5>
+                        </div>
+                      </div>
+                    </article>
+                    <article className="border-b border-gray-200 pb-4 last:border-b-0 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                      <div className="flex items-start space-x-4">
+                        <div className="flex-1">
+                          <div className="mb-1">
+                            <span className="text-blue-600 font-medium text-sm">Articles</span>
+                          </div>
+                          <h5 className="font-semibold text-gray-900 leading-tight hover:text-blue-600">Japan's peace initiatives preserving the past for the future</h5>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -387,7 +884,8 @@ export default function Home() {
               </div>
               <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0 md:space-x-6 text-sm text-gray-400">
                 <Link to="/privacy" className="hover:text-white cursor-pointer">Privacy Policy &amp; Terms of Service</Link>
-                <p>© 2025 Africa Economic Forum</p>
+        
+                <p>© 2026 Africa Economic Forum</p>
                 <a href="https://codesignglobal.com" className="hover:text-white cursor-pointer">Code Design Global</a>
               </div>
             </div>
