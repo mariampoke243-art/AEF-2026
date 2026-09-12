@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import AuthModal from '../../components/auth/AuthModal';
 import { supabase } from '../../supabase/client';
@@ -28,7 +27,6 @@ export default function Partners() {
 
   // Check for logged-in user on component mount
   useEffect(() => {
-    // Check localStorage first
     const savedUser = localStorage.getItem('aef_user');
     if (savedUser) {
       try {
@@ -39,11 +37,9 @@ export default function Partners() {
       }
     }
 
-    // Check Supabase session
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user && !savedUser) {
-        // Get user profile data
         const { data: profileData } = await supabase
           .from('users')
           .select('*')
@@ -68,8 +64,7 @@ export default function Partners() {
 
     checkSession();
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event) => {
       if (event === 'SIGNED_OUT') {
         localStorage.removeItem('aef_user');
         setUser(null);
@@ -145,67 +140,65 @@ export default function Partners() {
     }
   };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-          e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-              if (!formData.agreeContact) {
-                    alert('Please agree to be contacted by the Africa Economic Forum team.');
-                          return;
-                              }
-
-                                  if (formData.message.length > 500) {
-                                        alert('Message must be 500 characters or less.');
-                                              return;
-                                                  }
-
-                                                      setSubmitStatus('submitting');
-
-                                                          try {
-                                                                const { error } = await supabase.functions.invoke('send-email', {
-                                                                        body: {
-                                                                                  to: 'contact@africaef.com',
-                                                                                            subject: `Nouvelle demande de partenariat - ${formData.fullName}`,
-                                                                                                      html: `<h3>Nouvelle demande de partenariat</h3>
-                                                                                                                       <p><strong>Nom complet :</strong> ${formData.fullName}</p>
-                                                                                                                                        <p><strong>Titre :</strong> ${formData.title}</p>
-                                                                                                                                                         <p><strong>Organisation :</strong> ${formData.organization}</p>
-                                                                                                                                                                          <p><strong>Pays :</strong> ${formData.country}</p>
-                                                                                                                                                                                           <p><strong>E-mail :</strong> ${formData.email}</p>
-                                                                                                                                                                                                            <p><strong>Téléphone :</strong> ${formData.phone}</p>
-                                                                                                                                                                                                                             <p><strong>Site web :</strong> ${formData.website}</p>
-                                                                                                                                                                                                                                              <p><strong>Types de partenariat :</strong> ${formData.partnershipTypes.join(', ')}</p>
-                                                                                                                                                                                                                                                               <p><strong>Domaines d'intérêt :</strong> ${formData.areasOfInterest.join(', ')}</p>
-                                                                                                                                                                                                                                                                                <p><strong>Niveau d'engagement :</strong> ${formData.engagementLevel}</p>
-                                                                                                                                                                                                                                                                                                 <p><strong>Autre engagement :</strong> ${formData.otherEngagement}</p>`
-                                                                                                                                                                                                                                                                                                         }
-                                                                                                                                                                                                                                                                                                               });
-
-                                                                                                                                                                                                                                                                                                                     if (error) throw error;
-
-                                                                                                                                                                                                                                                                                                                           setSubmitStatus('success');
-                                                                                                                                                                                                                                                                                                                                 setFormData({
-                                                                                                                                                                                                                                                                                                                                         fullName: '',
-                                                                                                                                                                                                                                                                                                                                                 title: '',
-                                                                                                                                                                                                                                                                                                                                                         organization: '',
-                                                                                                                                                                                                                                                                                                                                                                 country: '',
-                                                                                                                                                                                                                                                                                                                                                                         email: '',
-                                                                                                                                                                                                                                                                                                                                                                                 phone: '',
-                                                                                                                                                                                                                                                                                                                                                                                         website: '',
-                                                                                                                                                                                                                                                                                                                                                                                                 partnershipTypes: [],
-                                                                                                                                                                                                                                                                                                                                                                                                         areasOfInterest: [],
-                                                                                                                                                                                                                                                                                                                                                                                                                 engagementLevel: '',
-                                                                                                                                                                                                                                                                                                                                                                                                                         otherEngagement: '',
-                                                                                                                                                                                                                                                                                                                                                                                                                                 message: '',
-                                                                                                                                                                                                                                                                                                                                                                                                                                         agreeContact: false,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                 subscribeNewsletter: false
-                                                                                                                                                                                                                                                                                                                                                                                                                                                       });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                           } catch (error) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                 console.error('Form submission error:', error);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                       setSubmitStatus('error');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                           }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                             };
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+    if (!formData.agreeContact) {
+      alert('Please agree to be contacted by the Africa Economic Forum team.');
+      return;
     }
+
+    if (formData.message.length > 500) {
+      alert('Message must be 500 characters or less.');
+      return;
+    }
+
+    setSubmitStatus('submitting');
+
+    try {
+      const { error } = await supabase.functions.invoke('send-email', {
+        body: {
+          to: 'contact@africaef.com',
+          subject: `Nouvelle demande de partenariat - ${formData.fullName}`,
+          html: `<h3>Nouvelle demande de partenariat</h3>
+                 <p><strong>Nom complet :</strong> ${formData.fullName}</p>
+                 <p><strong>Titre :</strong> ${formData.title}</p>
+                 <p><strong>Organisation :</strong> ${formData.organization}</p>
+                 <p><strong>Pays :</strong> ${formData.country}</p>
+                 <p><strong>E-mail :</strong> ${formData.email}</p>
+                 <p><strong>Téléphone :</strong> ${formData.phone}</p>
+                 <p><strong>Site web :</strong> ${formData.website}</p>
+                 <p><strong>Types de partenariat :</strong> ${formData.partnershipTypes.join(', ')}</p>
+                 <p><strong>Domaines d'intérêt :</strong> ${formData.areasOfInterest.join(', ')}</p>
+                 <p><strong>Niveau d'engagement :</strong> ${formData.engagementLevel}</p>
+                 <p><strong>Autre engagement :</strong> ${formData.otherEngagement}</p>`
+        }
+      });
+
+      if (error) throw error;
+
+      setSubmitStatus('success');
+      setFormData({
+        fullName: '',
+        title: '',
+        organization: '',
+        country: '',
+        email: '',
+        phone: '',
+        website: '',
+        partnershipTypes: [],
+        areasOfInterest: [],
+        engagementLevel: '',
+        otherEngagement: '',
+        message: '',
+        agreeContact: false,
+        subscribeNewsletter: false
+      });
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setSubmitStatus('error');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -777,8 +770,7 @@ export default function Partners() {
           <div className="border-t border-gray-700 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0 md:space-x-6 text-sm text-gray-400">
               <a href="/privacy" className="hover:text-white cursor-pointer">Privacy Policy &amp; Terms of Service</a>
-              
-              <p>© 2025 Africa Economic Forum</p>
+              <p>© 2026 Africa Economic Forum</p>
               <a href="https://codesignglobal.com" className="hover:text-white cursor-pointer">Code Design Global</a>
             </div>
           </div>
