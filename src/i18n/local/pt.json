@@ -1,0 +1,28 @@
+{
+      "home": "Inicio",
+        "agenda": "Agenda",
+          "about": "Sobre",
+          "ctaTitle": "Junte-se à Mesa Africana",
+          "ctaDescription": "Faça parte das conversas que estão moldando o futuro. Junte-se a nós por um ano de ação estratégica e parcerias transformadoras.",
+          "becomePartner": "Torne-se um Parceiro Estratégico",
+          "downloadProgram": "Baixar o Programa 2026",
+              "newsletterTitle": "Subscreva a nossa newsletter",
+                  "newsletterDesc": "Fique atualizado com as nossas últimas notícias e eventos.",
+                      "newsletterPlaceholder": "Digite o seu e-mail",
+                          "newsletterBtn": "Subscrever",
+                              "newsletterSuccess": "Obrigado por subscrever!",
+                                  "newsletterError": "Ocorreu um erro. Por favor, tente novamente."
+                 ,
+                      "intervenants": {
+                          "title": "Oradores",
+                              "subtitle": "AS PESSOAS QUE MOLDAM A CONVERSA.",
+                                  "description": "« A AEF reúne os decisores e as vozes que moldam a relação de África com o capital global, a tecnologia, a energia, o comércio e o investimento estratégico. »",
+                                      "categories": "Categorias: Chefes de Estado, líderes governamentais, investidores, CEOs, estrategas económicos, líderes financeiros e peritos setoriais.",
+                                          "confirmed": "Oradores confirmados",
+                                              "guests": "Lideranças convidadas"
+                                                
+                                                }
+
+                 }                 
+
+          

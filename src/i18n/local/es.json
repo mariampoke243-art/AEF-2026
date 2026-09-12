@@ -1,0 +1,29 @@
+{
+      "home": "Inicio",
+        "agenda": "Agenda",
+          "about": "Acerca de",
+          "ctaTitle": "Únete a La Mesa Africana",
+          "ctaDescription": "Sé parte de las conversaciones que están dando forma al futuro. Únete a nosotros por un año de acción estratégica y asociaciones transformadoras.",
+          "becomePartner": "Conviértete en Socio Estratégico",
+          "downloadProgram": "Descargar el Programa 2026",
+              "newsletterTitle": "Suscríbete a nuestro boletín",
+                  "newsletterDesc": "Mantente al día con nuestras últimas noticias y eventos.",
+                      "newsletterPlaceholder": "Ingresa tu correo electrónico",
+                          "newsletterBtn": "Suscribirse",
+                              "newsletterSuccess": "¡Gracias por suscribirte!",
+                                  "newsletterError": "Ocurrió un error. Por favor, inténtalo de nuevo."
+                  ,
+                      "intervenants": {
+                          "title": "Ponentes",
+                              "subtitle": "LAS PERSONAS QUE DAN FORMA A LA CONVERSACIÓN.",
+                                  "description": "« AEF reúne a los tomadores de decisiones y voces que dan forma a la relación de África con el capital global, la tecnología, la energía, el comercio y la inversión estratégica. »",
+                                      "categories": "Categorías: Jefes de Estado, líderes gubernamentales, inversores, directores ejecutivos (CEO), estrategas económicos, líderes financieros y expertos sectoriales.",
+                                          "confirmed": "Ponentes confirmados",
+                                              "guests": "Líderes invitados"
+                                                }
+                                            
+
+                  }                
+
+
+        

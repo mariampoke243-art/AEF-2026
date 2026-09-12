@@ -1,0 +1,29 @@
+{
+      "home": "Accueil",
+        "agenda": "Agenda",
+          "about": "À propos",
+          "ctaTitle": "Rejoignez la Table Africaine",
+          "ctaDescription": "Participez aux conversations qui façonnent l'avenir. Rejoignez-nous pour une année d'action stratégique et de partenariats transformationnels.",
+          "becomePartner": "Devenir un Partenaire Stratégique",
+          "downloadProgram": "Télécharger le Programme 2026",
+              "newsletterTitle": "Abonnez-vous à notre newsletter",
+                  "newsletterDesc": "Restez informés de nos dernières actualités et événements.",
+                      "newsletterPlaceholder": "Entrez votre email",
+                          "newsletterBtn": "S'abonner",
+                              "newsletterSuccess": "Merci pour votre inscription !",
+                                  "newsletterError": "Une erreur est survenue. Veuillez réessayer."
+                ,
+                      "intervenants": {
+                          "title": "Intervenants",
+                              "subtitle": "LES PERSONNES QUI FAÇONNENT LA CONVERSATION.",
+                                  "description": "« L'AEF réunit les décideurs et les voix qui façonnent la relation de l'Afrique avec le capital mondial, la technologie, l'énergie, le commerce et l'investissement stratégique. »",
+                                      "categories": "Catégories : chefs d'État, dirigeants gouvernementaux, investisseurs, PDG, stratèges économiques, dirigeants financiers et experts sectoriels.",
+                                          "confirmed": "Intervenants confirmés",
+                                              "guests": "Dirigeants invités"
+                                                
+                                                
+
+                }                  
+
+          
+          }
