@@ -2,15 +2,16 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { messages } from '../../i18n/local';
+
 export default function Home() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [showAnnouncement, setShowAnnouncement] = useState(true);
   const { user, isAuthenticated, signOut } = useAuth();
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
-    // tenta iniciar reprodução por programa (fallback para navegadores que bloqueiam autoplay)
     if (videoRef.current) {
       videoRef.current.muted = true;
       videoRef.current.play().catch(() => {
@@ -45,10 +46,9 @@ export default function Home() {
       .toUpperCase()
       .slice(0, 2);
   };
-    const currentLang = 'en'; // Vous pouvez ajuster selon votre gestion de langue globale
-      const t = messages[currentLang]?.translation || messages['en']?.translation;
 
-const [showAnnouncement, setShowAnnouncement] = useState(true);
+  const currentLang = 'en'; 
+  const t = messages[currentLang]?.translation || messages['en']?.translation;
 
   return (
     <div className="min-h-screen bg-white">
@@ -263,83 +263,72 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
         )}
       </header>
 
-      {/* Main Content */}
-      {/* --- FENÊTRE MODALE D'ANNONCE PERSONNALISÉE --- */}
+      {/* FENÊTRE MODALE D'ANNONCE PERSONNALISÉE */}
       {showAnnouncement && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fade-in">
-            <div className="bg-gradient-to-br from-blue-950 to-blue-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-blue-800 text-white relative">
-                  
-                        {/* Bouton de fermeture */}
-                              <button 
-                                      onClick={() => setShowAnnouncement(false)}
-                                              className="absolute top-4 right-4 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition z-10"
-                                                      aria-label="Fermer"
-                                                            >
-                                                                    ✕
-                                                                          </button>
+          <div className="bg-gradient-to-br from-blue-950 to-blue-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-blue-800 text-white relative">
+            
+            {/* Bouton de fermeture */}
+            <button 
+              onClick={() => setShowAnnouncement(false)}
+              className="absolute top-4 right-4 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition z-10"
+              aria-label="Fermer"
+            >
+              ✕
+            </button>
 
-                                                                                {/* En-tête style Affiche */}
-                                                                                      <div className="p-6 pb-4 border-b border-blue-800/60 relative">
-                                                                                              <span className="text-xs uppercase tracking-widest text-blue-300 font-semibold bg-blue-900/80 px-3 py-1 rounded-full border border-blue-700/50">
-                                                                                                        <span className="text-xs uppercase tracking-widest text-blue-300 font-semibold bg-blue-900/80 px-3 py-1 rounded-full border border-blue-700/50">
-                                                                                                          {t?.home?.forumBadge || "Africa Economic Forum 2026"}
-                                                                                                          </span>
-                                                                                                          <h3 className="text-3xl font-extrabold mt-3 tracking-tight">
-                                                                                                            {t?.home?.forumTitle || "Africa & Global Realignments:"}
-                                                                                                            </h3>
-                                                                                                            <p className="text-blue-200 text-sm mt-1 font-medium">
-                                                                                                              {t?.home?.forumSubtitle || "Investments, Alliances & Strategic Opportunities"}
-                                                                                                              </p>
+            {/* En-tête style Affiche */}
+            <div className="p-6 pb-4 border-b border-blue-800/60 relative">
+              <span className="text-xs uppercase tracking-widest text-blue-300 font-semibold bg-blue-900/80 px-3 py-1 rounded-full border border-blue-700/50">
+                {t?.home?.forumBadge || "Africa Economic Forum 2026"}
+              </span>
+              <h3 className="text-3xl font-extrabold mt-3 tracking-tight">
+                {t?.home?.forumTitle || "Africa & Global Realignments:"}
+              </h3>
+              <p className="text-blue-200 text-sm mt-1 font-medium">
+                {t?.home?.forumSubtitle || "Investments, Alliances & Strategic Opportunities"}
+              </p>
+            </div>
 
-                                                                                                                                                                          </div>
+            {/* Corps de la modale */}
+            <div className="p-6 space-y-5 bg-blue-900/40">
+              <div className="grid grid-cols-2 gap-4 bg-blue-950/60 p-4 rounded-xl border border-blue-800/40">
+                <div>
+                  <span className="block text-xs uppercase text-blue-400 font-semibold">{t?.home?.datesLabel || "Dates"}</span>
+                  <span className="text-lg font-bold text-white">10-11 Nov 2026</span>
+                </div>
+                <div>
+                  <span className="block text-xs uppercase text-blue-400 font-semibold">{t?.home?.locationLabel || "Lieu"}</span>
+                  <span className="text-sm font-semibold text-white">Kinshasa<br/><span className="text-xs text-blue-300 font-normal">Fleuve Congo Hotel</span></span>
+                </div>
+              </div>
 
-                                                                                                                                                                                {/* Corps de la modale avec les infos pratiques de l'affiche */}
-                                                                                                                                                                                      <div className="p-6 space-y-5 bg-blue-900/40">
-                                                                                                                                                                                              
-                                                                                                                                                                                                      {/* Bloc Dates et Lieu */}
-                                                                                                                                                                                                              <div className="grid grid-cols-2 gap-4 bg-blue-950/60 p-4 rounded-xl border border-blue-800/40">
-                                                                                                                                                                                                                        <div>
-                                                                                                                                                                                                                                    <span className="block text-xs uppercase text-blue-400 font-semibold">Dates</span>
-                                                                                                                                                                                                                                                <span className="text-lg font-bold text-white">10-11 Nov 2026</span>
-                                                                                                                                                                                                                                                          </div>
-                                                                                                                                                                                                                                                                    <div>
-                                                                                                                                                                                                                                                                        <span className="block text-xs uppercase text-blue-400 font-semibold">{t?.home?.datesLabel || "Dates"}</span>
-                                                                                                                                                                                                                                                                          <span className="text-lg font-bold text-white">10-11 Nov 2026</span>
-                                                                                                                                                                                                                                                                          </div>
-                                                                                                                                                                                                                                                                          <div>
-                                                                                                                                                                                                                                                                            <span className="block text-xs uppercase text-blue-400 font-semibold">{t?.home?.locationLabel || "Lieu"}</span>
-                                                                                                                                                                                                                                                                              <span className="text-sm font-semibold text-white">Kinshasa<br/><span className="text-xs text-blue-300 font-normal">Fleuve Congo Hotel</span></span>
-                                                                                                                                                                                                                                                                              </div>
-                                                                                                                                                                                                                                                                              
+              <p className="text-xs text-blue-300/80 text-center italic">
+                Partner with Africa's Davos • www.africaef.com
+              </p>
 
-                                                                                                                                                                                                                                                                                                                      <p className="text-xs text-blue-300/80 text-center italic">
-                                                                                                                                                                                                                                                                                                                                Partner with Africa's Davos • www.africaef.com
-                                                                                                                                                                                                                                                                                                                                        </p>
+              {/* Boutons d'action */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <Link
+                  to="/agenda"
+                  onClick={() => setShowAnnouncement(false)}
+                  className="flex-1 bg-white hover:bg-blue-50 text-blue-950 font-bold py-3 px-4 rounded-xl text-center transition shadow-lg flex items-center justify-center space-x-2"
+                >
+                  <span>📅 {t?.home?.viewAgenda || "Voir l'Agenda"}</span>
+                </Link>
+                <button
+                  onClick={() => setShowAnnouncement(false)}
+                  className="px-5 py-3 bg-blue-800/60 hover:bg-blue-800 text-white font-medium rounded-xl transition border border-blue-700/50 text-sm"
+                >
+                  {t?.common?.close || "Fermer"}
+                </button>
+              </div>
+            </div>
 
-                                                                                                                                                                                                                                                                                                                                                {/* Boutons d'action avec lien Agenda */}
-                                                                                                                                                                                                                                                                                                                                                        <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                                                                                                                                                                                                                                                                                                                                                                  <Link
-                                                                                                                                                                                                                                                                                                                                                                          
-                                                                                                                                                                                                                                                                                                                                                                                to="/agenda"
-                                                                                                                                                                                                                                                                                                                                                                                  onClick={() => setShowAnnouncement(false)}
-                                                                                                                                                                                                                                                                                                                                                                                    className="flex-1 bg-white hover:bg-blue-50 text-blue-950 font-bold py-3 px-4 rounded-xl text-center transition shadow-lg flex items-center justify-center space-x-2"
-                                                                                                                                                                                                                                                                                                                                                                                    >
-                                                                                                                                                                                                                                                                                                                                                                                      <span>📅 {t?.home?.viewAgenda || "Voir l'Agenda"}</span>
-                                                                                                                                                                                                                                                                                                                                                                                      </Link>
-                                                                                                                                                                                                                                                                                                                                                                                      <button
-                                                                                                                                                                                                                                                                                                                                                                                        onClick={() => setShowAnnouncement(false)}
-                                                                                                                                                                                                                                                                                                                                                                                          className="px-5 py-3 bg-blue-800/60 hover:bg-blue-800 text-white font-medium rounded-xl transition border border-blue-700/50 text-sm"
-                                                                                                                                                                                                                                                                                                                                                                                          >
-                                                                                                                                                                                                                                                                                                                                                                                            {t?.common?.close || "Fermer"}
-                                                                                                                                                                                                                                                                                                                                                                                            </button>
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+          </div>
+        </div>
+      )}
+      
       <main>
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20 lg:py-32">
@@ -349,11 +338,11 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
                 <div className="space-y-6">
                   <p className="text-blue-200 text-lg font-medium">Our mission</p>
                   <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
-                    A premier platform convening leaders, governments, investors, and thinkers to shape Africa’s role in the new global order
+                    A premier platform convening leaders, governments, investors, and thinkers to shape Africa’s role in the new global order
                   </h1>
                   <Link
                     to="/about"
-                    className="bg-white text-blue-900 px-8 py-3 rounded-md hover:bg-gray-100 font-medium flex items-center space-x-2 whitespace-nowrap cursor-pointer"
+                    className="bg-white text-blue-900 px-8 py-3 rounded-md hover:bg-gray-100 font-medium flex items-center space-x-2 whitespace-nowrap cursor-pointer inline-flex"
                   >
                     <span>More about the Forum</span>
                     <i className="ri-arrow-right-line"></i>
@@ -447,7 +436,7 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
                 </a>
               </div>
 
-              {/* Existing right column content */}
+              {/* Right column images grid */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
@@ -498,7 +487,7 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
           </div>
         </section>
 
-        {/* Our 10 Meetings */}
+        {/* Our Meetings */}
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -619,7 +608,7 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
                   <div className="relative">
                     <img 
                       src="https://assets.weforum.org/article/image/Uwbfxacnvqw4k8cRvkrJtfWmaE3yh_DoZ6yD_QxdCeo.jpg" 
-                      alt="SDIM 2025: Surprising stats and key conversations from our New York meetings" 
+                      alt="SDIM 2025" 
                       className="w-full h-64 object-cover object-top" 
                     />
                   </div>
@@ -627,7 +616,7 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
                     <div className="flex items-center space-x-4 mb-4">
                       <span className="text-blue-600 font-medium text-sm">Global Cooperation</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 leading-tight">Unveiling investment-ready nations and transformative partnerships.</h3>
+                    <h3 className="text-xl font-bold text-gray-900 leading-tight">Unveiling investment-ready nations and transformative partnerships.</h3>
                   </div>
                 </article>
               </div>
@@ -637,7 +626,7 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
                     <div className="relative w-32 h-24 flex-shrink-0">
                       <img 
                         src="https://assets.weforum.org/article/image/vxHpLiINOQ37FUtocfRZvxAwdPaUDjT3rBAlxjrbC0k.JPG" 
-                        alt="Europe is lagging in AI adoption – how can businesses close the gap?" 
+                        alt="Europe AI" 
                         className="w-full h-full object-cover object-top" 
                       />
                     </div>
@@ -654,7 +643,7 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
                     <div className="relative w-32 h-24 flex-shrink-0">
                       <img 
                         src="https://assets.weforum.org/report/cover_image/d6PK7yfSfpnxr5PWKuA6yy5B1R0Kc9uasr9W_V31XqE.png" 
-                        alt="Defossilizing Industry: Considerations for Scaling-up Carbon Capture and Utilization Pathways" 
+                        alt="Defossilizing Industry" 
                         className="w-full h-full object-cover object-top" 
                       />
                     </div>
@@ -671,7 +660,7 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
                     <div className="relative w-32 h-24 flex-shrink-0">
                       <img 
                         src="https://assets.weforum.org/article/image/liFHL8-4-8B-VTlVsvpRRostMNqNmaGbKv-TGGYu3Sg.JPG" 
-                        alt="Logistics Emergency Team: 20 years of coordinating humanitarian aid" 
+                        alt="Logistics Emergency" 
                         className="w-full h-full object-cover object-top" 
                       />
                     </div>
@@ -683,115 +672,6 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
                     </div>
                   </div>
                 </article>
-                <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
-                  <div className="flex">
-                    <div className="relative w-32 h-24 flex-shrink-0">
-                      <img 
-                        src="https://cdn.jwplayer.com/thumbs/rqTBjlzG-1920.jpg" 
-                        alt="Climate change is threatening workers' health. Here are 8 ways businesses can protect their employees" 
-                        className="w-full h-full object-cover object-top" 
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="bg-black/50 rounded-full p-2">
-                          <i className="ri-play-fill text-white text-lg"></i>
-                        </div>
-                      </div>
-                      <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">2:35</div>
-                    </div>
-                    <div className="p-4 flex-1">
-                      <div className="mb-2">
-                        <span className="text-blue-600 font-medium text-sm">Climate Action</span>
-                      </div>
-                      <h4 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-3">Climate change is threatening workers' health. Here are 8 ways businesses can protect their employees</h4>
-                    </div>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Discover */}
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center mb-12">
-              <div>
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">Discover</h2>
-                <p className="text-gray-600 text-lg">Find stories through a selection of our key strategic topics</p>
-              </div>
-              <button className="bg-blue-900 text-white px-6 py-3 rounded-md hover:bg-blue-800 font-medium flex items-center space-x-2 whitespace-nowrap cursor-pointer">
-                <span>More topics</span>
-                <i className="ri-arrow-right-line"></i>
-              </button>
-            </div>
-            <div className="space-y-16">
-              <div className="bg-gray-50 rounded-lg p-8">
-                <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-2xl font-bold text-gray-900">Resilience, Peace and Security</h3>
-                  <button className="text-blue-600 hover:text-blue-800 font-medium flex items-center space-x-2 cursor-pointer">
-                    <span>View more</span>
-                    <i className="ri-arrow-right-line"></i>
-                  </button>
-                </div>
-                <div className="grid lg:grid-cols-3 gap-8">
-                  <div className="lg:col-span-1">
-                    <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
-                      <img 
-                        src="https://assets.weforum.org/article/image/Z6_Ad4qkPfdLI33a7PykS9BrrIcL916mG5SSEeOOksU.jpg" 
-                        alt="Why women must be involved in building flood resilience" 
-                        className="w-full h-48 object-cover object-top" 
-                      />
-                      <div className="p-6">
-                        <div className="mb-2">
-                          <span className="text-blue-600 font-medium text-sm">Articles</span>
-                        </div>
-                        <h4 className="font-semibold text-gray-900 leading-tight">Why women must be involved in building flood resilience</h4>
-                      </div>
-                    </article>
-                  </div>
-                  <div className="lg:col-span-2 space-y-4">
-                    <article className="border-b border-gray-200 pb-4 last:border-b-0 cursor-pointer hover:bg-gray-50 p-2 rounded">
-                      <div className="flex items-start space-x-4">
-                        <div className="flex-1">
-                          <div className="mb-1">
-                            <span className="text-blue-600 font-medium text-sm">Reports</span>
-                          </div>
-                          <h5 className="font-medium text-gray-900 leading-tight hover:text-blue-600">Building Economic Resilience to the Health Impacts of Climate Change</h5>
-                        </div>
-                      </div>
-                    </article>
-                    <article className="border-b border-gray-200 pb-4 last:border-b-0 cursor-pointer hover:bg-gray-50 p-2 rounded">
-                      <div className="flex items-start space-x-4">
-                        <div className="flex-1">
-                          <div className="mb-1">
-                            <span className="text-blue-600 font-medium text-sm">Articles</span>
-                          </div>
-                          <h5 className="font-medium text-gray-900 leading-tight hover:text-blue-600">Why we must rethink ...</h5>
-                        </div>
-                      </div>
-                    </article>
-                    <article className="border-b border-gray-200 pb-4 last:border-b-0 cursor-pointer hover:bg-gray-50 p-2 rounded">
-                      <div className="flex items-start space-x-4">
-                        <div className="flex-1">
-                          <div className="mb-1">
-                            <span className="text-blue-600 font-medium text-sm">Articles</span>
-                          </div>
-                          <h5 className="font-medium text-gray-900 leading-tight hover:text-blue-600">Why is the International Day of Peace ...</h5>
-                        </div>
-                      </div>
-                    </article>
-                    <article className="border-b border-gray-200 pb-4 last:border-b-0 cursor-pointer hover:bg-gray-50 p-2 rounded">
-                      <div className="flex items-start space-x-4">
-                        <div className="flex-1">
-                          <div className="mb-1">
-                            <span className="text-blue-600 font-medium text-sm">Articles</span>
-                          </div>
-                          <h5 className="font-semibold text-gray-900 leading-tight hover:text-blue-600">Japan's peace initiatives preserving the past for the future</h5>
-                        </div>
-                      </div>
-                    </article>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -821,8 +701,6 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
                 <li><Link to="/agenda" className="text-gray-300 hover:text-white cursor-pointer">Forum Stories</Link></li>
                 <li><Link to="/publications" className="text-gray-300 hover:text-white cursor-pointer">Press releases</Link></li>
                 <li><Link to="/gallery" className="text-gray-300 hover:text-white cursor-pointer">Photo gallery</Link></li>
-                <li><Link to="/publications" className="text-gray-300 hover:text-white cursor-pointer">Podcasts</Link></li>
-                <li><Link to="/publications" className="text-gray-300 hover:text-white cursor-pointer">Videos</Link></li>
               </ul>
             </div>
             <div>
@@ -841,8 +719,6 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
                 </li>
                 <li><Link to="/partners" className="text-gray-300 hover:text-white cursor-pointer">Partner with us</Link></li>
                 <li><Link to="/join" className="text-gray-300 hover:text-white cursor-pointer">Become a member</Link></li>
-                <li><Link to="/contact" className="text-gray-300 hover:text-white cursor-pointer">Sign up for our press releases</Link></li>
-                <li><Link to="/contact" className="text-gray-300 hover:text-white cursor-pointer">Subscribe to our newsletters</Link></li>
                 <li><Link to="/contact" className="text-gray-300 hover:text-white cursor-pointer">Contact us</Link></li>
               </ul>
             </div>
@@ -852,18 +728,6 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
                 <li><Link to="/about" className="text-gray-300 hover:text-white cursor-pointer">Sustainability at the Forum</Link></li>
                 <li><Link to="/careers" className="text-gray-300 hover:text-white cursor-pointer">Careers</Link></li>
               </ul>
-              <div>
-                <h4 className="font-semibold mb-4">Language editions</h4>
-                <div className="flex space-x-2">
-                  <Link to="/" className="text-gray-300 hover:text-white cursor-pointer">EN</Link>
-                  <span className="text-gray-500">•</span>
-                  <Link to="/" className="text-gray-300 hover:text-white cursor-pointer">ES</Link>
-                  <span className="text-gray-500">•</span>
-                  <Link to="/" className="text-gray-300 hover:text-white cursor-pointer">中文</Link>
-                  <span className="text-gray-500">•</span>
-                  <Link to="/" className="text-gray-300 hover:text-white cursor-pointer">日本語</Link>
-                </div>
-              </div>
             </div>
           </div>
           <div className="border-t border-gray-700 pt-8">
@@ -878,13 +742,9 @@ const [showAnnouncement, setShowAnnouncement] = useState(true);
                 <a href="https://www.instagram.com/theafricaeconomicforum?igsh=MWowNmw1NjdueXNkbQ==" className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors cursor-pointer">
                   <i className="ri-instagram-fill text-xl"></i>
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors cursor-pointer">
-                  <i className="ri-youtube-fill text-xl"></i>
-                </a>
               </div>
               <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0 md:space-x-6 text-sm text-gray-400">
                 <Link to="/privacy" className="hover:text-white cursor-pointer">Privacy Policy &amp; Terms of Service</Link>
-        
                 <p>© 2026 Africa Economic Forum</p>
                 <a href="https://codesignglobal.com" className="hover:text-white cursor-pointer">Code Design Global</a>
               </div>
