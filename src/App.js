@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 
 function App() {
   useEffect(() => {
-    // Ajout automatique du script Google Translate si non présent
     if (!document.getElementById('google-translate-script')) {
       const addScript = document.createElement('script');
       addScript.id = 'google-translate-script';
@@ -23,23 +22,24 @@ function App() {
   return (
     <div className="site-container">
       {/* --- HEADER --- */}
-      <header className="navbar">
+      <header className="navbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', padding: '10px 20px' }}>
         <div className="logo-container">
           <span style={{ fontWeight: 'bold', fontSize: '1.1rem', color: '#fff' }}>AEF 2026</span>
         </div>
         
-        <nav className="nav-links">
+        <nav className="nav-links" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
           <a href="#home">Home</a>
           <a href="#about">About</a>
           <a href="#initiatives">Initiative</a>
           <a href="#stakeholders">Stakeholders</a>
           <a href="#agenda">Agenda</a>
           <a href="#publications">Publications</a>
-          <a href="#contact">Contact</a>
         </nav>
 
-        {/* Sélecteur de langue intégré */}
-        <div className="language-selector" id="google_translate_element"></div>
+        {/* Sélecteur de langue bien visible */}
+        <div className="language-selector" style={{ background: '#1e293b', padding: '6px 12px', borderRadius: '8px', border: '1px solid #475569' }}>
+          <div id="google_translate_element"></div>
+        </div>
       </header>
 
       {/* --- CONTENU PRINCIPAL --- */}
