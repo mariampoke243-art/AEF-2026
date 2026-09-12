@@ -8,7 +8,6 @@ body {
   text-align: center;
 }
 
-/* Centrage global de tous les textes et conteneurs */
 h1, h2, h3, h4, h5, h6, p, span, label, li {
   text-align: center;
   margin-left: auto;
@@ -17,16 +16,64 @@ h1, h2, h3, h4, h5, h6, p, span, label, li {
 
 /* Redimensionnement standard et propre du logo */
 header img, .logo img, img.logo {
-  width: 120px !important;
-  height: 120px !important;
+  width: 110px !important;
+  height: 110px !important;
   object-fit: contain !important;
-  margin: 20px auto !important;
+  margin: 15px auto !important;
   border-radius: 50%;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   display: block;
 }
 
-/* Images générales en format carte centrée avec fluidité */
+/* Style de la barre de menu (Navigation) */
+nav, .nav, header nav, div nav {
+  background-color: #ffffff;
+  padding: 12px 20px;
+  margin: 15px auto 30px auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border-radius: 50px;
+  max-width: 900px;
+}
+
+/* Style des liens du menu et de navigation */
+nav a, .nav a, header a {
+  color: #1e293b;
+  background-color: #f1f5f9;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  display: inline-block;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+}
+
+nav a:hover, .nav a:hover, header a:hover {
+  background-color: #2563eb;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+}
+
+/* Liens généraux dans le contenu */
+a {
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* Images générales en format carte centrée */
 img {
   max-width: 85%;
   height: auto;
@@ -35,14 +82,14 @@ img {
   object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.15);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-in-out;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 img:hover {
   transform: scale(1.03);
 }
 
-/* Boutons modernes avec effet CSS interactif */
+/* Boutons modernes */
 button, input[type="submit"], .btn {
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   color: #ffffff;
