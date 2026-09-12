@@ -11,7 +11,19 @@ function App() {
         <p>Empowering Africa's Economic Future</p>
       </header>
 
-      {/* Ajout du sélecteur de langues et de la newsletter */}
+      {/* Menu de navigation */}
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#initiative">Initiative</a>
+        <a href="#stakeholders">Stakeholders</a>
+        <a href="#agenda">Agenda</a>
+        <a href="#publications">Publications</a>
+        <a href="#meetings">Meetings</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      {/* Ajout des Langues et de la Newsletter */}
       <LanguageAndNewsletter />
 
       <footer>
